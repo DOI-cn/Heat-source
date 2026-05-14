@@ -5,24 +5,34 @@ class PrimaryActionButton extends StatelessWidget {
     super.key,
     required this.label,
     required this.onPressed,
-    this.icon,
+    required this.icon,
+    this.isLoading = false,
   });
 
   final String label;
   final VoidCallback? onPressed;
-  final IconData? icon;
+  final IconData icon;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return SizedBox(
       width: double.infinity,
-      child: ElevatedButton.icon(
-        onPressed: onPressed,
-        icon: Icon(icon ?? Icons.play_arrow_rounded),
-        label: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: Text(label),
-        ),
+      height: 48,
+      child: FilledButton.icon(
+        onPressed: isLoading ? null : onPressed,
+        icon: isLoading
+            ? SizedBox.square(
+                dimension: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: colorScheme.onPrimary,
+                ),
+              )
+            : Icon(icon),
+        label: Text(isLoading ? '处理中...' : label),
       ),
     );
   }
